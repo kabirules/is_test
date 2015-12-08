@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<jpa:repositories base-package="hello" />
+
+ 	<jpa:repositories base-package="com.hazelcast.jpa.repository" />
+
+    <bean class="com.hazelcast.jpa.SpringJPAMapStore" id="jpamapstore">
+        <property name="crudRepository" ref="productRepository" />
+    </bean>
+
+    <bean id="entityManagerFactory"
+      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+          <property name="generateDdl" value="true" />
+          <property name="database" value="MYSQL" />
+        </bean>
+      </property>
+        <property name="persistenceUnitName" value="jpa.sample" />
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager"
+      id="transactionManager">
+      <property name="entityManagerFactory"
+          ref="entityManagerFactory" />
+      <property name="jpaDialect">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+      </property>
+    </bean>
+ 
+</beans>    
